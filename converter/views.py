@@ -1,36 +1,33 @@
-import pyttsx3
-from django.shortcuts import render
-import requests
-from django.http import JsonResponse, HttpResponse
-from django.core.files.storage import FileSystemStorage
-from gtts import gTTS
+# converter/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from .models import UploadedFile
+from .utils import extract_text_from_pdf, extract_text_from_docx, text_to_speech
+import os
 
 
-def upload_file(request):
-    if request.method == 'POST' and 'document' in request.FILES:
-        document = request.FILES['document']
+class FileUploadView(APIView):
+    permission_classes = [AllowAny]
 
-        # Faylni serverga yuklaymiz
-        fs = FileSystemStorage()
-        filename = fs.save(document.name, document)
-        file_path = fs.path(filename)
+    def post(self, request, format=None):
+        file = request.FILES['file']
+        file_instance = UploadedFile.objects.create(user=request.user, file=file)
 
-        # Fayldan matnni chiqarib olish
-        with open(file_path, 'r') as file:
-            text = file.read()
+        # Fayl turini aniqlash
+        file_extension = os.path.splitext(file.name)[1]
+        if file_extension == '.pdf':
+            text = extract_text_from_pdf(file)
+        elif file_extension == '.docx':
+            text = extract_text_from_docx(file)
+        elif file_extension == '.txt':
+            text = file.read().decode('utf-8')
+        else:
+            return Response({"error": "Fayl formati noto'g'ri!"}, status=400)
 
-        # pyttsx3 orqali matnni ovozga aylantirish
-        engine = pyttsx3.init()
-        engine.save_to_file(text, 'output_audio.mp3')
-        engine.runAndWait()
+        # Matnni ovozga aylantirish
+        output_file = f'media/audio/{file_instance.id}.mp3'
+        text_to_speech(text, output_file)
 
         # Ovozli faylni foydalanuvchiga qaytarish
-        with open('output_audio.mp3', 'rb') as f:
-            response = HttpResponse(f.read(), content_type='audio/mpeg')
-            response['Content-Disposition'] = 'attachment; filename="output_audio.mp3"'
-            return response
-
-    return render(request, 'converter/upload.html')
-
-
-
+        return Response({"audio_file_url": request.build_absolute_uri(output_file)}, status=201)

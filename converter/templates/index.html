@@ -1,0 +1,29 @@
+<form id="upload-form" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file">
+    <button type="submit">Upload</button>
+</form>
+
+<audio id="audio" controls></audio>
+
+<script>
+    $('#upload-form').submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: '/api/upload/',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            },
+            success: function(response) {
+                $('#audio').attr('src', response.audio_file_url);
+            },
+            error: function(error) {
+                alert('Fayl yuklashda xatolik: ' + error.responseText);
+            }
+        });
+    });
+</script>
