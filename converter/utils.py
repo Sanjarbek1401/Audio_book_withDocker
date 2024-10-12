@@ -1,22 +1,129 @@
-# converter/utils.py
 import os
+import uuid
 import pyttsx3
 import PyPDF2
 import docx
+from PyPDF2 import PdfReader
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+ALLOWED_EXTENSIONS = {'.pdf', '.docx', '.txt'}
+
+
+def validate_file(file):
+    if file.size > MAX_FILE_SIZE:
+        raise ValueError("File size exceeds maximum limit")
+
+    file_extension = os.path.splitext(file.name)[1].lower()
+    if file_extension not in ALLOWED_EXTENSIONS:
+        raise ValueError("Invalid file format")
+
+    return file_extension
+
 
 def extract_text_from_pdf(file):
-    pdf_reader = PyPDF2.PdfFileReader(file)
-    text = ''
-    for page_num in range(pdf_reader.numPages):
-        text += pdf_reader.getPage(page_num).extract_text()
-    return text
+    try:
+        pdf_reader = PdfReader(file)
+        text = ''
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+        return text
+    except Exception as e:
+        raise ValueError(f"Error processing PDF file: {str(e)}")
+
 
 def extract_text_from_docx(file):
-    doc = docx.Document(file)
-    text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-    return text
+    try:
+        doc = docx.Document(file)
+        text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+        return text
+    except Exception as e:
+        raise ValueError(f"Error processing DOCX file: {str(e)}")
 
-def text_to_speech(text, output_file='output.mp3'):
-    engine = pyttsx3.init()
-    engine.save_to_file(text, output_file)
-    engine.runAndWait()
+
+def extract_text_from_txt(file):
+    try:
+        return file.read().decode('utf-8')
+    except UnicodeDecodeError:
+        try:
+            return file.read().decode('latin-1')
+        except Exception as e:
+            raise ValueError(f"Error processing TXT file: {str(e)}")
+
+
+def extract_text(file, file_extension):
+    extractors = {
+        '.pdf': extract_text_from_pdf,
+        '.docx': extract_text_from_docx,
+        '.txt': extract_text_from_txt
+    }
+
+    extractor = extractors.get(file_extension.lower())
+    if not extractor:
+        raise ValueError(f"No text extractor found for {file_extension}")
+
+    return extractor(file)
+
+
+def text_to_speech(text, output_file):
+    try:
+        engine = pyttsx3.init()
+
+        engine.setProperty('rate', 150)
+        engine.setProperty('volume', 0.9)
+        engine.setProperty('voice', 'english')
+
+        # Faylga saqlash
+        engine.save_to_file(text, output_file)
+        engine.runAndWait()
+
+        if not os.path.exists(output_file):
+            raise Exception("Audio file was not created")
+
+        return True
+    except Exception as e:
+        logger.error(f"Text-to-speech error: {str(e)}")
+
+        # Try fallback TTS if available
+        try:
+            import gtts
+            tts = gtts.gTTS(text=text, lang='en')
+            tts.save(output_file)
+            return True
+        except Exception as fallback_e:
+            logger.error(f"Fallback TTS also failed: {str(fallback_e)}")
+            raise ValueError("Could not convert text to speech. Please check system configuration.")
+
+
+def ensure_dir(file_path):
+    directory = os.path.dirname(file_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
+def process_file(file, file_extension):
+    try:
+        # Extract text from file
+        text = extract_text(file, file_extension)
+
+        # Generate unique filename for audio output
+        output_filename = f"{uuid.uuid4()}.mp3"
+        output_dir = os.path.join(settings.MEDIA_ROOT, 'audio')
+        ensure_dir(output_dir)
+        output_path = os.path.join(output_dir, output_filename)
+
+        # Convert text to speech
+        success = text_to_speech(text, output_path)
+
+        if success:
+            return output_filename
+        else:
+            raise ValueError("Failed to convert text to speech")
+
+    except Exception as e:
+        logger.error(f"Error processing file: {str(e)}")
+        raise ValueError(f"Error processing file: {str(e)}")

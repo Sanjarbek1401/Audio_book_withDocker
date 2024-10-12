@@ -1,5 +1,74 @@
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="document">
-    <button type="submit">Faylni yuklash</button>
-</form>
+{% extends 'converter/base_generic.html' %}
+
+{% block title %}Fayl yuklash va ovozli fayl yaratish{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Fayl yuklang va ovozli fayl oling</h1>
+    <form id="file-upload-form" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="file-input">Fayl tanlang:</label>
+            <input type="file" name="file" id="file-input" accept=".pdf,.docx,.txt" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Yuklash</button>
+    </form>
+    <div id="loading" class="loading hidden mt-3 text-center">Iltimos kuting, fayl qayta ishlanmoqda...</div>
+    <div id="error-message" class="error hidden text-danger mt-3"></div>
+    <br>
+    <div id="result" class="hidden">
+        <h3 class="mt-4">Ovozli fayl tayyor:</h3>
+        <audio controls id="audio-player" class="w-100">
+            <source id="audio-source" src="" type="audio/mpeg">
+            Sizning brauzeringiz audiolarni qo'llab-quvvatlamaydi.
+        </audio>
+    </div>
+</div>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById('file-upload-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('error-message');
+        const resultElement = document.getElementById('result');
+
+        // Reset UI
+        loadingElement.classList.remove('hidden');
+        errorElement.classList.add('hidden');
+        resultElement.classList.add('hidden');
+
+        fetch('', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingElement.classList.add('hidden');
+
+            if (data.success) {
+                const audioSource = document.getElementById('audio-source');
+                audioSource.src = data.audio_file_url;
+                resultElement.classList.remove('hidden');
+                document.getElementById('audio-player').load();
+            } else {
+                throw new Error(data.error || 'Noma\'lum xatolik yuz berdi');
+            }
+        })
+        .catch(error => {
+            loadingElement.classList.add('hidden');
+            errorElement.textContent = error.message;
+            errorElement.classList.remove('hidden');
+        });
+    });
+</script>
+{% endblock %}
