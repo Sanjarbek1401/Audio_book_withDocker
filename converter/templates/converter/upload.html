@@ -44,7 +44,7 @@
         errorElement.classList.add('hidden');
         resultElement.classList.add('hidden');
 
-        fetch('', {
+        fetch('{% url "file-upload" %}', {  // Ensure to use the correct URL for your upload view
             method: 'POST',
             body: formData,
             headers: {

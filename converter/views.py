@@ -6,7 +6,7 @@ import logging
 from django.conf import settings
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from . forms import  UserRegisterForm
+from . forms import  UserRegisterForm,UserLoginForm
 
 logger = logging.getLogger(__name__)
 
@@ -26,16 +26,19 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request,user)
-            return render(request,'converter/upload.html')
-        else:
-            messages.error(request, 'Username or Password is incorrect')
-    return render(request, 'converter/login.html')
-
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('file-upload')
+            else:
+                messages.error(request, 'Username or Password is incorrect')
+    else:
+        form = UserLoginForm()
+    return render(request, 'converter/login.html', {'form': form})
 
 
 
