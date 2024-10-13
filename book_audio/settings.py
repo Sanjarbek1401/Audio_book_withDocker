@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,9 @@ LOGIN_REDIRECT_URL = '/converter/upload/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tlg0ppn!(f(-4suj7-9j(lyj&ev5afd4e=g#3x+#+)s=qwr*t#'
+load_dotenv()
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS =  ['mysite.com', 'localhost', '127.0.0.1']
@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'converter',
-    'rest_framework',
-    'rest_framework_simplejwt',
     'social_django',
 ]
 
@@ -156,11 +154,12 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '568752741435-i3gseu3sd7a2tt8la384ackqt1ioj3e9.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_OAUTH2_SECRET')
 
-SOCIAL_AUTH_FACEBOOK_KEY = '1526493858230626'
-SOCIAL_AUTH_FACEBOOK_SECRET = '3b3743441f36b7063b9b209713b12ef8'
+SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('FACEBOOK_OAUTH2_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('FACEBOOK_OAUTH2_SECRET')
+
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 
