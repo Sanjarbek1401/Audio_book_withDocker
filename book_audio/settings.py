@@ -80,24 +80,21 @@ WSGI_APPLICATION = 'book_audio.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+import os,dj_database_url
+DATABASES = {
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+}
 
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'PASSWORD': '1425',
+    #     'HOST': 'db',
+    #     'PORT': '5432',
+    # }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '1425',
-        'HOST': 'db',
-        'PORT': '5432',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -173,28 +170,28 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/app/django_debug.log',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/app/django_debug.log',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console', 'file'],
+#         'level': 'INFO',
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#     },
+# }
