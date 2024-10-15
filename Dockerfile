@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y espeak libespeak-ng1 ffmpeg
 
 # Talablar faylini nusxalaymiz va o'rnatamiz
 COPY old_requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r old_requirements.txt
 
 # Loyihaning qolgan barcha fayllarini container ichiga nusxalaymiz
 COPY . .
