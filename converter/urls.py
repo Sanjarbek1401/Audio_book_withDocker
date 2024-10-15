@@ -3,7 +3,7 @@ from .views import file_upload_view,register,login_view
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('upload/', file_upload_view, name='file-upload'),
+    path('', file_upload_view, name='file-upload'),
 
     path('register/', register, name='register'),
 
