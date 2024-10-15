@@ -24,7 +24,7 @@ LOGIN_REDIRECT_URL = '/converter/upload/'
 load_dotenv()
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS =  ['*']
 
