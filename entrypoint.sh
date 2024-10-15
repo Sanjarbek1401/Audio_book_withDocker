@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Migrations'larni ko'rsatish va agar bo'sh migrations bo'lsa, yangilarini yaratish
 if [ "$(python manage.py showmigrations | grep '\[ ]' | wc -l)" -gt 0 ]; then
     echo "Running makemigrations..."
     python manage.py makemigrations
@@ -11,5 +12,6 @@ python manage.py migrate
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-echo "Starting Django server..."
-python manage.py runserver 0.0.0.0:8000
+# Django runserver o'rniga gunicorn serverdan foydalanish
+echo "Starting Gunicorn server..."
+exec gunicorn book_audio.wsgi:application --bind 0.0.0.0:8000 --workers 3
