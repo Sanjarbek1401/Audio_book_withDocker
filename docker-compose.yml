@@ -14,13 +14,16 @@ services:
     build: .
     volumes:
       - .:/app
+      - ./media:/app/media
+
+
     ports:
-      - "8000:8000"
+      - "8080:8000"
     depends_on:
       - db
     environment:
       - DEBUG=0
-      - DJANGO_SECRET_KEY=your-secret-key-here
+      - DJANGO_SECRET_KEY=django-insecure-tlg0ppn!(f(-4suj7-9j(lyj&ev5afd4e=g#3x+#+)s=qwr*t#
       - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,mysite.com
     expose:
       - "8000"

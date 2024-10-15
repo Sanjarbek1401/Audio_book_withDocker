@@ -1,6 +1,106 @@
 {% extends "converter/base_generic.html" %}
 
 {% block content %}
+<style>
+    /* Facebook va Google uchun maxsus ranglar */
+    .btn-facebook {
+        background-color: #3b5998;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-google {
+        background-color: #db4437;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-facebook:hover {
+        background-color: #2d4373;
+    }
+
+    .btn-google:hover {
+        background-color: #c23321;
+    }
+
+    /* Form styling */
+    .form-container {
+        max-width: 600px; /* Register maydonining kengligi oshirildi */
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 24px; /* Sarlavhani kattalashtirish */
+    }
+
+    .form-container form {
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+
+    .social {
+        margin-top: 30px;
+    }
+
+    .social p {
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .social-list {
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .social-item {
+        margin-bottom: 15px;
+    }
+
+    /* Icon styling */
+    .social-item i {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    /* Input form elementlari uchun qo'shimcha o'rin */
+    .form-container input {
+        padding: 12px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+</style>
+
 <div class="form-container">
     <h2>Register</h2>
     <form method="POST">
@@ -9,18 +109,23 @@
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </div>
-     <div class="social">
- <ul>
- <li class="facebook">
- <a href="{% url "social:begin" "facebook" %}">
-          Sign in with Facebook
- </a>
- </li>
-      <li class="google">
- <a href="{% url "social:begin" "google-oauth2" %}">
-      Sign in with Google
- </a>
- </li>
-  </ul>
- </div>
+
+<div class="social">
+    <p>Or register using:</p>
+    <ul class="social-list">
+        <li class="social-item">
+            <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-facebook">
+                <i class="fab fa-facebook-f"></i> Sign in with Facebook
+            </a>
+        </li>
+        <li class="social-item">
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-google">
+                <i class="fab fa-google"></i> Sign in with Google
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- FontAwesome ulash -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 {% endblock %}

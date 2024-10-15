@@ -4,4 +4,3 @@ from . models import UploadedFile
 admin.site.register(UploadedFile)
 
 
-# Register your models here.

@@ -139,6 +139,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #if DEBUG:
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),
     ]
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 #else:
 #    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Default primary key field type
@@ -170,3 +174,28 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 #         'rest_framework_simplejwt.authentication.JWTAuthentication',
 #     ),
 # }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/app/django_debug.log',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
