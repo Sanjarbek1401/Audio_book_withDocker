@@ -168,12 +168,7 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 
 
-# text_to_speech/settings.py
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ),
-# }
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
