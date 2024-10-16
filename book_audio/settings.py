@@ -20,9 +20,9 @@ LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 
 
 # Quick-start development settings - unsuitable for production
