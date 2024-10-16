@@ -21,9 +21,9 @@ LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://read-book-3.onrender.com/social-auth/complete/google-oauth2/'
 
 
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
 
 
 # Quick-start development settings - unsuitable for production
