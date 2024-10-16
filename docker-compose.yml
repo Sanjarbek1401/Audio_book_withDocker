@@ -24,7 +24,8 @@ services:
     environment:
       - DEBUG=0
       - DJANGO_SECRET_KEY=django-insecure-tlg0ppn!(f(-4suj7-9j(lyj&ev5afd4e=g#3x+#+)s=qwr*t#
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,mysite.com
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,'*'
+
     expose:
       - "8000"
 

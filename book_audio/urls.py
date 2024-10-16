@@ -30,9 +30,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-# from rest_framework_simplejwt.views import TokenObtainPairView
 
-# urlpatterns += [
-#     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-# ]
 
