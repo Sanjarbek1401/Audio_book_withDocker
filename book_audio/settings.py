@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://read-book-3.onrender.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://read-book-3.onrender.com/social-auth/complete/google-oauth2/'
 
 
 SESSION_COOKIE_SECURE = False
